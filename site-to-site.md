@@ -31,6 +31,7 @@ Alibaba Cloud VPN Gateway.
         - [Create the GCP external IP address](#create-the-gcp-external-ip-address)
     - [Configure route-based IPsec VPN using static routing](#configure-route-based-ipsec-vpn-using-static-routing)
         - [Configure the VPN gateway](#configure-the-vpn-gateway)
+	- [Configure Custom Static Routes with Route Prioritization](#configure-custom-static-routes-with-route-prioritization)
         - [Configure firewall rules](#configure-firewall-rules)
 - [Configure the Alibaba Cloud side](#configure-the-alibaba-cloud-side)
     - [Create an Alibaba Cloud VPC](#create-an-alibaba-cloud-vpc)
@@ -342,6 +343,24 @@ gateways will not connect until you've configured the on-premises gateway and
 created firewall rules in GCP to allow traffic through the tunnel between the
 Cloud VPN  gateway and the on-premises gateway.
 
+
+#### Configure Custom Static Routes with Route Prioritization
+
+
+1. In the GCP Console, [go to the GCP Routes page](https://console.cloud.google.com/networking/routes)
+2. Click **Create route**
+3. Specify a **Name** and a **Description** for the route.
+4. Select an existing **Network** where the route will apply.
+5. Specify a **Destination IP range** to define the destination of the route.
+6. Specify a **Priority** for the route. A priority is only used to to determine routing order if routes have equivalent destinations. See static route parameters for more details. [static route parameters](https://cloud.google.com/vpc/docs/routes#individualroutes)
+7. To make the route applicable only to select instances with matching network tags, specify those in the Instance tags field. Leave the field blank to make the route applicable to all instances in the network.
+8. Select a **Next hop** for the route:
+Specify **VPN tunnel** allows you to select an existing Cloud VPN tunnel as a next hop. The tunnel must use policy based routing or it must be a route based VPN
+9. Click **Create**
+10. Repeat steps and create another static route for the same destination prefix. Use the same tunnel priority to equal cost load balance traffic or use a tunnel prioritization to a different value to route based on (highest or lowest) priority.
+
+**Important**: You cannot edit or update a route after you create it. To modify a custom static route, you must delete it and create a replacement.
+
 #### Configure firewall rules
 
 Next, you configure GCP firewall rules to allow inbound traffic from the
@@ -507,6 +526,9 @@ To learn more about GCP networking, see the following documents:
 -  [Creating Route-based VPNs](https://cloud.google.com/vpn/docs/how-to/creating-route-based-vpns)
 -  [Creating Policy-based VPNs](https://cloud.google.com/vpn/docs/how-to/creating-policy-based-vpns)
 -  [Advanced Cloud VPN Configurations](https://cloud.google.com/vpn/docs/concepts/advanced)
+-  [Redundant and High-throughput VPNs](https://cloud.google.com/vpn/docs/concepts/redundant-vpns)
+-  [Static Routes Overview](https://cloud.google.com/vpc/docs/routes#routeselection)
+-  [Networks and tunnel routing](https://cloud.google.com/vpn/docs/concepts/choosing-networks-routing)
 -  [Troubleshooting Cloud VPN](https://cloud.google.com/compute/docs/vpn/troubleshooting)
 
 ### Alibaba Cloud VPN Gateway documentation
